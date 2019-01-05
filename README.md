@@ -1,4 +1,4 @@
-home\_credit
+README
 ================
 Sabrina Tan
 2019-01-05
@@ -46,7 +46,7 @@ app_train <- read.csv('application_train.csv')
 
 #### The Target Variable
 
-The target variable in this problem is the column 'TARGET', indicating whether the client had difficulties repaying the loan. 1 indicates yes (positive), and 0 indicates no (negative). <br> ![](home_credit_files/figure-markdown_github/unnamed-chunk-3-1.png)
+The target variable in this problem is the column 'TARGET', indicating whether the client had difficulties repaying the loan. 1 indicates yes (positive), and 0 indicates no (negative). <br> ![](README_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
 ``` r
 table(app_train$TARGET)
@@ -178,7 +178,7 @@ Most positive and most negative correlations with the target variable:
 
 #### Age variable: highest positive correlation
 
-The age variable is stored as a negative value (days before application date) in the dataset. They are converted to a true age for exploration purposes. <br> Plots: ![](home_credit_files/figure-markdown_github/unnamed-chunk-10-1.png)![](home_credit_files/figure-markdown_github/unnamed-chunk-10-2.png)
+The age variable is stored as a negative value (days before application date) in the dataset. They are converted to a true age for exploration purposes. <br> Plots: ![](README_files/figure-markdown_github/unnamed-chunk-10-1.png)![](README_files/figure-markdown_github/unnamed-chunk-10-2.png)
 
 Binning the age variable:
 
@@ -212,7 +212,7 @@ age_groups
 
 Plot of the new age groups and average of the target variable:
 
-![](home_credit_files/figure-markdown_github/unnamed-chunk-12-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
 Now we can see a clear trend between default and age. <br>
 
@@ -230,7 +230,7 @@ corrplot(ext_data_cor, method = 'circle', tl.col='black', tl.cex=0.6, tl.srt=30,
          col = colorRampPalette(c('white','orchid4','orange'))(200)) 
 ```
 
-![](home_credit_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 Looking at the distributions of default by EXT\_SOURCE variables:
 
@@ -240,7 +240,7 @@ Looking at the distributions of default by EXT\_SOURCE variables:
 
     ## Warning: Removed 60965 rows containing non-finite values (stat_density).
 
-![](home_credit_files/figure-markdown_github/unnamed-chunk-14-1.png)![](home_credit_files/figure-markdown_github/unnamed-chunk-14-2.png)![](home_credit_files/figure-markdown_github/unnamed-chunk-14-3.png) <br> <br>
+![](README_files/figure-markdown_github/unnamed-chunk-14-1.png)![](README_files/figure-markdown_github/unnamed-chunk-14-2.png)![](README_files/figure-markdown_github/unnamed-chunk-14-3.png) <br> <br>
 
 Modelling
 ---------
@@ -324,7 +324,7 @@ predictions <- pred_df %>%
 F1_Score(test_TARGET, predictions$PREDICTION)
 ```
 
-    ## [1] 0.9581155
+    ## [1] 0.9579065
 
 This is the F1 score achieved using logistic regression. <br>
 
@@ -435,7 +435,7 @@ lgbimp <- lgb.importance(lgb.model)
 lgb.plot.importance(lgbimp, top_n = 20)
 ```
 
-![](home_credit_files/figure-markdown_github/unnamed-chunk-27-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-27-1.png)
 
 <br>
 
@@ -494,7 +494,7 @@ plotLearningCurve(learningCurve, facet = 'learner') +
   labs(title = 'Learning Curve for LightGBM Model')
 ```
 
-![](home_credit_files/figure-markdown_github/unnamed-chunk-33-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-33-1.png)
 
 <br>
 
