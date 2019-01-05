@@ -37,6 +37,7 @@ library(mlr)
 
 ``` r
 ## Importing data:
+setwd('/Users/sabrinatan/Documents/HomeCredit/all')
 app_test <- read.csv('application_test.csv')
 app_train <- read.csv('application_train.csv')
 ```
@@ -102,50 +103,44 @@ head(na_count)
     ## 71 NONLIVINGAPARTMENTS_MODE 213514
     ## 85 NONLIVINGAPARTMENTS_MEDI 213514
 
-<br
+<br>
 
 #### Columns
 
 This section explores the types of columns in the Home Credit dataset.
 
-
-```r
+``` r
 # Number of columns of each type
 table(sapply(app_train, class))
 ```
 
-```
-## 
-##  factor integer numeric 
-##      16      41      65
-```
+    ## 
+    ##  factor integer numeric 
+    ##      16      41      65
 
-
-
-```r
+``` r
 # Number of unique entries in each of the factor columns
 factorVars <- which(sapply(app_train, is.factor))
 sapply(app_train[names(factorVars)], nlevels)
 ```
 
-```
-##         NAME_CONTRACT_TYPE                CODE_GENDER 
-##                          2                          3 
-##               FLAG_OWN_CAR            FLAG_OWN_REALTY 
-##                          2                          2 
-##            NAME_TYPE_SUITE           NAME_INCOME_TYPE 
-##                          8                          8 
-##        NAME_EDUCATION_TYPE         NAME_FAMILY_STATUS 
-##                          5                          6 
-##          NAME_HOUSING_TYPE            OCCUPATION_TYPE 
-##                          6                         19 
-## WEEKDAY_APPR_PROCESS_START          ORGANIZATION_TYPE 
-##                          7                         58 
-##         FONDKAPREMONT_MODE             HOUSETYPE_MODE 
-##                          5                          4 
-##         WALLSMATERIAL_MODE        EMERGENCYSTATE_MODE 
-##                          8                          3
-```
+    ##         NAME_CONTRACT_TYPE                CODE_GENDER 
+    ##                          2                          3 
+    ##               FLAG_OWN_CAR            FLAG_OWN_REALTY 
+    ##                          2                          2 
+    ##            NAME_TYPE_SUITE           NAME_INCOME_TYPE 
+    ##                          8                          8 
+    ##        NAME_EDUCATION_TYPE         NAME_FAMILY_STATUS 
+    ##                          5                          6 
+    ##          NAME_HOUSING_TYPE            OCCUPATION_TYPE 
+    ##                          6                         19 
+    ## WEEKDAY_APPR_PROCESS_START          ORGANIZATION_TYPE 
+    ##                          7                         58 
+    ##         FONDKAPREMONT_MODE             HOUSETYPE_MODE 
+    ##                          5                          4 
+    ##         WALLSMATERIAL_MODE        EMERGENCYSTATE_MODE 
+    ##                          8                          3
+
 <br>
 
 #### Checking correlations between features and target variable
@@ -257,6 +252,7 @@ The baseline model I used was logistic regression using glmnet. I first modelled
 #### Partitioned data
 
 ``` r
+setwd('/Users/sabrinatan/Documents/HomeCredit/all')
 app_test <- read.csv('application_test.csv')
 app_train <- read.csv('application_train.csv')
 
@@ -328,7 +324,7 @@ predictions <- pred_df %>%
 F1_Score(test_TARGET, predictions$PREDICTION)
 ```
 
-    ## [1] 0.9573244
+    ## [1] 0.9581155
 
 This is the F1 score achieved using logistic regression. <br>
 
