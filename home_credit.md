@@ -5,9 +5,12 @@ Sabrina Tan
 
 <br>
 
-<br> \# Kaggle: Home Credit Default Risk \#\#\#\# December 2018 - January 2019
+# Kaggle: Home Credit Default Risk 
+#### December 2018 - January 2019
 
-During a holiday break, I decided to learn more about machine learning using [Machine Learning by Stanford University](https://www.coursera.org/learn/machine-learning/home/welcome), and try to solidify the knowledge by applying the concepts learned. I chose Kaggle's [Home Credit Default Risk](https://www.kaggle.com/c/home-credit-default-risk) problem, being one of the more popular datasets with plentiful resources online in case I got stuck, and one that I could immediately see how concepts from the course could be applied. The problem is a supervised classification problem with binary output. This is a documentation of the progress made thus far. <br> \#\# Exploratory Data Analysis
+During a holiday break, I decided to learn more about machine learning using [Machine Learning by Stanford University](https://www.coursera.org/learn/machine-learning/home/welcome), and try to solidify the knowledge by applying the concepts learned. I chose Kaggle's [Home Credit Default Risk](https://www.kaggle.com/c/home-credit-default-risk) problem, being one of the more popular datasets with plentiful resources online in case I got stuck, and one that I could immediately see how concepts from the course could be applied. The problem is a supervised classification problem with binary output. This is a documentation of the progress made thus far. 
+<br> 
+## Exploratory Data Analysis
 
 I looked to [this kernel](https://www.kaggle.com/willkoehrsen/start-here-a-gentle-introduction) to guide me through the initial data exploration prior to modelling and started off using the main application\_train and application\_test datasets.
 
@@ -15,134 +18,17 @@ I looked to [this kernel](https://www.kaggle.com/willkoehrsen/start-here-a-gentl
 ## Libraries used:
 library(rmarkdown)
 library(tidyverse)
-```
-
-    ## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
-
-    ## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
-    ## ✔ tibble  1.4.2     ✔ dplyr   0.7.8
-    ## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
-    ## ✔ readr   1.3.1     ✔ forcats 0.3.0
-
-    ## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-
-``` r
 library(questionr)
 library(caret)
-```
-
-    ## Loading required package: lattice
-
-    ## 
-    ## Attaching package: 'caret'
-
-    ## The following object is masked from 'package:purrr':
-    ## 
-    ##     lift
-
-``` r
 library(corrplot)
-```
-
-    ## corrplot 0.84 loaded
-
-``` r
 library(imputeMissings)
-```
-
-    ## 
-    ## Attaching package: 'imputeMissings'
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     compute
-
-``` r
 library(glmnet)
-```
-
-    ## Loading required package: Matrix
-
-    ## 
-    ## Attaching package: 'Matrix'
-
-    ## The following object is masked from 'package:tidyr':
-    ## 
-    ##     expand
-
-    ## Loading required package: foreach
-
-    ## 
-    ## Attaching package: 'foreach'
-
-    ## The following objects are masked from 'package:purrr':
-    ## 
-    ##     accumulate, when
-
-    ## Loaded glmnet 2.0-16
-
-``` r
 library(Matrix)
 library(MLmetrics)
-```
-
-    ## 
-    ## Attaching package: 'MLmetrics'
-
-    ## The following objects are masked from 'package:caret':
-    ## 
-    ##     MAE, RMSE
-
-    ## The following object is masked from 'package:base':
-    ## 
-    ##     Recall
-
-``` r
 library(lightgbm)
-```
-
-    ## Loading required package: R6
-
-    ## 
-    ## Attaching package: 'lightgbm'
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     slice
-
-``` r
 library(BBmisc)
-```
-
-    ## 
-    ## Attaching package: 'BBmisc'
-
-    ## The following objects are masked from 'package:dplyr':
-    ## 
-    ##     coalesce, collapse
-
-    ## The following object is masked from 'package:base':
-    ## 
-    ##     isFALSE
-
-``` r
 library(mlr)
 ```
-
-    ## Loading required package: ParamHelpers
-
-    ## 
-    ## Attaching package: 'mlr'
-
-    ## The following object is masked from 'package:imputeMissings':
-    ## 
-    ##     impute
-
-    ## The following object is masked from 'package:caret':
-    ## 
-    ##     train
 
 ``` r
 ## Importing data:
@@ -150,9 +36,12 @@ app_test <- read.csv('application_test.csv')
 app_train <- read.csv('application_train.csv')
 ```
 
-<br> \#\#\#\# The Target Variable
+<br> 
+#### The Target Variable
 
-The target variable in this problem is the column 'TARGET', indicating whether the client had difficulties repaying the loan. 1 indicates yes (positive), and 0 indicates no (negative). <br> ![](home_credit_files/figure-markdown_github/unnamed-chunk-3-1.png)
+The target variable in this problem is the column 'TARGET', indicating whether the client had difficulties repaying the loan. 1 indicates yes (positive), and 0 indicates no (negative). 
+<br> 
+![](home_credit_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
 ``` r
 table(app_train$TARGET)
@@ -162,7 +51,9 @@ table(app_train$TARGET)
     ##      0      1 
     ## 282686  24825
 
-Since there are many more 0's than 1's, this is an imbalanced classification problem. <br> \#\#\#\# Missing values
+Since there are many more 0's than 1's, this is an imbalanced classification problem. 
+<br> 
+#### Missing values
 
 ``` r
 ## The top 20 features with missing values
@@ -207,7 +98,8 @@ head(na_count)
     ## 71 NONLIVINGAPARTMENTS_MODE 213514
     ## 85 NONLIVINGAPARTMENTS_MEDI 213514
 
-<br> \#\#\#\# Columns
+<br> 
+#### Columns
 
 This section explores the types of columns in the Home Credit dataset.
 
@@ -243,7 +135,8 @@ sapply(app_train[names(factorVars)], nlevels)
     ##         WALLSMATERIAL_MODE        EMERGENCYSTATE_MODE 
     ##                          8                          3
 
-<br> \#\#\#\# Checking correlations between features and target variable
+<br> 
+#### Checking correlations between features and target variable
 
 First one-hot encoding the categorical variables using the caret package so the cor function can be run.
 
@@ -274,9 +167,12 @@ Most positive and most negative correlations with the target variable:
     ## EXT_SOURCE_2                         -0.16047167
     ## EXT_SOURCE_3                         -0.17891870
 
-<br> \#\#\#\#\# Age variable: highest positive correlation
+<br> 
+##### Age variable: highest positive correlation
 
-The age variable is stored as a negative value (days before application date) in the dataset. They are converted to a true age for exploration purposes. <br> Plots: ![](home_credit_files/figure-markdown_github/unnamed-chunk-10-1.png)![](home_credit_files/figure-markdown_github/unnamed-chunk-10-2.png)
+The age variable is stored as a negative value (days before application date) in the dataset. They are converted to a true age for exploration purposes. 
+<br> 
+Plots: ![](home_credit_files/figure-markdown_github/unnamed-chunk-10-1.png)![](home_credit_files/figure-markdown_github/unnamed-chunk-10-2.png)
 
 Binning the age variable:
 
@@ -312,7 +208,9 @@ Plot of the new age groups and average of the target variable:
 
 ![](home_credit_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
-Now we can see a clear trend between default and age. <br> \#\#\#\#\# EXT\_SOURCE variables - highest negative correlations
+Now we can see a clear trend between default and age. 
+<br> 
+##### EXT\_SOURCE variables - highest negative correlations
 
 The external source variables (EXT\_SOURCE1, EXT\_SOURCE\_2, EXT\_SOURCE\_3) correspond to the client's "Normalized score from external data source".
 
@@ -343,7 +241,7 @@ Modelling
 
 ### Logistic regression
 
-The baseline model I used was logistic regression using glmnet. I first modelled using a 60/40 split on the application\_train dataset, then trained on the entire application\_train dataset for the baseline submission to Kaggle. <br> \#\#\#\# Partitioned data
+The baseline model I used was logistic regression using glmnet. I first modelled using a 60/40 split on the application\_train dataset, then trained on the entire application\_train dataset for the baseline submission to Kaggle. <br> #### Partitioned data
 
 ``` r
 app_test <- read.csv('application_test.csv')
@@ -387,7 +285,8 @@ levels(test$CODE_GENDER) <- c(levels(test$CODE_GENDER), 'XNA')
 levels(test$NAME_INCOME_TYPE) <- c(levels(test$NAME_INCOME_TYPE), 'Maternity leave')
 ```
 
-<br> I initially used base R's glm function, however this was running extremely slow. I decided to convert to sparse model matrices and use glmnet.
+<br> 
+I initially used base R's glm function, however this was running extremely slow. I decided to convert to sparse model matrices and use glmnet.
 
 ``` r
 # Sparse model matrix
@@ -419,7 +318,8 @@ F1_Score(test_TARGET, predictions$PREDICTION)
 
     ## [1] 0.9575033
 
-This is the F1 score achieved using logistic regression. <br>
+This is the F1 score achieved using logistic regression. 
+<br>
 
 #### Kaggle submission 1
 
@@ -448,10 +348,9 @@ dim(app_test_matrix)
 # Logistic regression
 target <- app_train_imputed$TARGET
 log_fit <- glmnet(app_train_matrix, target, family = 'binomial')
-plot(fit)
 ```
 
-![](home_credit_files/figure-markdown_github/unnamed-chunk-23-1.png)
+
 
 ``` r
 coef(fit, s = 0)
@@ -474,13 +373,15 @@ write.csv(submission2, file = 'log_baseline2.csv', row.names = FALSE)
 
 The initial score returned by Kaggle was 0.66825.
 
-<br> <br>
+<br> 
+<br>
 
 ### LightGBM
 
 The next model I decided to try is LightGBM due to its popularity and success on Kaggle (despite trees not being covered in Stanford's ML course). I used [this kernel](https://www.kaggle.com/couyang/home-credit-eda-lightgbm) as a guide.
 
-<br> Here I am using the 60/40 partitioned data from above since I need to enter "valids" as a parameter in lightgbm. Variable names are fixed (spaces replaced with '.'). <br>
+<br> Here I am using the 60/40 partitioned data from above since I need to enter "valids" as a parameter in lightgbm. Variable names are fixed (spaces replaced with '.'). 
+<br>
 
 ``` r
 # Fixing colnames
@@ -523,7 +424,12 @@ result <- data.frame(SK_ID_CURR = test_ID, TARGET = lgb_pred)
 
 <br>
 
-Using LightGBM, the score given by Kaggle is 0.73300. <br> <br> \#\# Error Analysis Andrew Ng outlines in his course that the step to follow the baseline model implementation is error analysis. Learning curves are discussed as a tool to identify cause of error. This plot will be created, but first, a feature importance graph: <br>
+Using LightGBM, the score given by Kaggle is 0.73300. 
+<br> 
+<br> 
+## Error Analysis 
+Andrew Ng outlines in his course that the step to follow the baseline model implementation is error analysis. Learning curves are discussed as a tool to identify cause of error. This plot will be created, but first, a feature importance graph: 
+<br>
 
 ``` r
 lgbimp <- lgb.importance(lgb.model)
@@ -532,13 +438,15 @@ lgb.plot.importance(lgbimp, top_n = 20)
 
 ![](home_credit_files/figure-markdown_github/unnamed-chunk-27-1.png)
 
-<br> \#\#\#\# Error Curve Analysis I used the mlr package to generate a learning curve for the LightGBM model.
+<br> 
+#### Error Curve Analysis I used the mlr package to generate a learning curve for the LightGBM model.
 
 <br>
 
 I used a custom classification LightGBM learner from [here](https://github.com/ja-thomas/autoxgboost/blob/boosting_backends/R/RLearner_classif_lightgbm.R).
 
-<b> Creating the "Task type" and "Learner":
+<br>
+Creating the "Task type" and "Learner":
 
 ``` r
 # Task type creation
@@ -562,7 +470,8 @@ classif.lrn <- makeLearner('classif.lightgbm', predict.type = 'prob', fix.factor
 # classif.lrn
 ```
 
-<r> Training the learner:
+<br>
+Training the learner:
 
 ``` r
 mod <- train(classif.lrn, classif.task)
@@ -666,7 +575,8 @@ learningCurve <- generateLearningCurveData(learners = classif.lrn,
 
     ## 
 
-<br> Learning curve plot:
+<br>
+Learning curve plot:
 
 ``` r
 plotLearningCurve(learningCurve, facet = 'learner') +
@@ -677,4 +587,7 @@ plotLearningCurve(learningCurve, facet = 'learner') +
 
 ![](home_credit_files/figure-markdown_github/unnamed-chunk-33-1.png)
 
-<br> From this error curve plot, I can deduce that the model is producing results with high variance (large gap between curves; overfitting). Going forward, to improve the model, options to address overfitting are: \* Getting more training examples (not viable as this is a Kaggle competition) \* Less features: I could refer to the EDA portion of the project to identify the most importance features to keep (potentially use feature engineering to generate more important features and drop insignificant ones)
+<br>
+From this error curve plot, I can deduce that the model is producing results with high variance (large gap between curves; overfitting). Going forward, to improve the model, options to address overfitting are: 
+* Getting more training examples (not viable as this is a Kaggle competition) 
+* Less features: I could refer to the EDA portion of the project to identify the most importance features to keep (potentially use feature engineering to generate more important features and drop insignificant ones)
