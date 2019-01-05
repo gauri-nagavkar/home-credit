@@ -3,8 +3,11 @@ library(tidyverse)
 library(CatEncoders)
 library(wrapr)
 library(imputeMissings)
+library(BBmisc)
+library(speedglm)
+library(glmnet)
 
-setwd('/Users/sabrinatan/Documents/home_credit data/all')
+setwd('/Users/sabrinatan/Documents/HomeCredit/all')
 app_test <- read.csv('application_test.csv')
 app_train <- read.csv('application_train.csv')
 
@@ -41,7 +44,7 @@ dmy <- dummyVars("~.", data = app_train)
 trsf <- data.frame(predict(dmy, newdata = app_train))
 app_train <- trsf
 
-## Alignment of training and testing data - ???
+## Alignment of training and testing data 
 # Adding factor levels present in train data but not test data
 levels(app_test$CODE_GENDER) <- c(levels(app_test$CODE_GENDER), "XNA")
 levels(app_test$NAME_INCOME_TYPE) <- c(levels(app_test$NAME_INCOME_TYPE), 'Maternity leave')
@@ -175,8 +178,37 @@ train<- impute(data = train, object = impute_train, flag = FALSE)
 test<- impute(data = test, object = impute_test, flag = FALSE)
 
 # Normalizing
-range01 <- function(x){(x-min(x))/(max(x)-min(x))}
-sab <- vapply(train, function(x) {if(is.numeric(x)) (x-min(x))/max(x)-min(x)})
+train <- normalize(train, method = "range", range = c(0, 1))
 
 # Logistic regression
-glm_Logit <- glm(TARGET ~., data = as.data.frame(train), family = 'binomial')
+glm_Logit <- glm(TARGET ~., data = train, family = binomial(link = 'logit'), control = list(maxit = 50)) #didn't converge'
+glm_test <- glm(TARGET ~ DAYS_BIRTH, data = train, family = binomial(link = 'logit')) #this works
+summary(glm_test)
+
+## Trying glmnet 
+# for_matrix <- train[, -which(names(train) == 'TARGET')]
+# train_matrix <- sparse.model.matrix(~., data = for_matrix)
+# target <- train[, 'TARGET']
+# 
+# fit <- glmnet(train_matrix, target, family = 'binomial')
+# plot(fit, xvar = 'dev', label = TRUE)
+train_matrix <- sparse.model.matrix(TARGET~., data = train)
+target <- train$TARGET
+
+fit <- glmnet(train_matrix, target, family = 'binomial')
+
+plot(fit)
+coef(fit, s = 0.001)
+
+# Predict probabilities on test set
+test_matrix <- sparse.model.matrix(~., data = test)
+pred_test <- predict(fit, newx = test_matrix, type = 'response', s = c(0.01, 0.001, 0))
+pred_df <- as.data.frame(pred_test)
+
+submit <- as.data.frame(app_test$SK_ID_CURR)
+submit$TARGET <- pred_df$`3`
+colnames(submit) <- c('SK_ID_CURR', 'TARGET')
+options(scipen = 999)
+str(submit)
+
+write.csv(submit, file = 'log_baseline.csv', row.names = FALSE)

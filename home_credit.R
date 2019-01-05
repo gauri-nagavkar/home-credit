@@ -5,8 +5,7 @@ library(mice)
 
 ## home_credit project - classification problem with binary output
 
-setwd('/Users/sabrinatan/Documents/home_credit data/all')
-
+setwd('/Users/sabrinatan/Documents/HomeCredit/all')
 application_test <- read.csv('application_test.csv')
 application_train <- read.csv('application_train.csv')
 bureau_balance <- read.csv('bureau_balance.csv')
@@ -98,7 +97,7 @@ plot_missing(all[!(is.na(all$TARGET)),])
 md.pattern(all[!(is.na(all$TARGET)),])
 
 # Quickly impute missing data with mice package - haven't dealt w colinear variables so pmm doesn't work. using cart - THIS DOESN'T WORK
-numVars <- names(all[!(is.na(all$TARGET)),])[sapply(all[!(is.na(all$TARGET)),], is.numeric)]
-train <- all[!(is.na(all$TARGET)),]
-tempTrain <- mice(data = train[numVars], m = 5, method = 'norm.predict', maxit = 50, seed = 500)
+# numVars <- names(all[!(is.na(all$TARGET)),])[sapply(all[!(is.na(all$TARGET)),], is.numeric)]
+# train <- all[!(is.na(all$TARGET)),]
+# tempTrain <- mice(data = train[numVars], m = 5, method = 'norm.predict', maxit = 50, seed = 500)
 
