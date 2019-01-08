@@ -500,6 +500,6 @@ plotLearningCurve(learningCurve, facet = 'learner') +
 
 From this error curve plot, I can deduce that the model is producing results with high variance (large gap between curves; overfitting). Going forward, to improve the model, options to address overfitting are:
 
--   Getting more training examples (not viable as this is a Kaggle competition
+-   Getting more training examples (not viable as this is a Kaggle competition)
 
 -   Less features: I could refer to the EDA portion of the project to identify the most importance features to keep (potentially use feature engineering to generate more important features and drop insignificant ones)
